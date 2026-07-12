@@ -1,0 +1,42 @@
+{
+  "parameters": {
+    "church_top_n": {
+      "defaultValue": { "value": "20" },
+      "description": "교회 점수 합산 상위 N명 (결정 A4: 파일럿에서 10/20/30 실험)",
+      "valueType": "NUMBER"
+    },
+    "weekly_reset_dow": {
+      "defaultValue": { "value": "1" },
+      "description": "주간 리더보드 리셋 요일 (결정 A3: 1=월요일). 0=일요일",
+      "valueType": "NUMBER"
+    },
+    "weekly_reset_hour_kst": {
+      "defaultValue": { "value": "0" },
+      "description": "주간 리셋 시각(시, KST)",
+      "valueType": "NUMBER"
+    },
+    "min_answer_seconds": {
+      "defaultValue": { "value": "1.5" },
+      "description": "문제당 이 시간 미만 연타 반복 시 매크로 의심 → 세션 포인트 무효",
+      "valueType": "NUMBER"
+    },
+    "interstitial_every": {
+      "defaultValue": { "value": "20" },
+      "description": "전면광고 노출 주기(문제 수)",
+      "valueType": "NUMBER"
+    },
+    "combo_threshold_1": {
+      "defaultValue": { "value": "5" },
+      "description": "콤보 1단계 임계(연속 정답) → +10% 보너스",
+      "valueType": "NUMBER"
+    },
+    "combo_threshold_2": {
+      "defaultValue": { "value": "10" },
+      "description": "콤보 2단계 임계(연속 정답) → +25% 보너스",
+      "valueType": "NUMBER"
+    }
+  },
+  "version": {
+    "description": "M0 starter — 파라미터 확정은 티켓 #18"
+  }
+}

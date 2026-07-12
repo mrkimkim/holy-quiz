@@ -1,0 +1,7 @@
+{
+  "projects": {
+    "default": "malssum-quiz-dev",
+    "dev": "malssum-quiz-dev",
+    "prod": "malssum-quiz-prod"
+  }
+}

@@ -1,0 +1,39 @@
+rules_version = '2';
+
+// 서버 권위(server-authority) 스텁 — 상세 확정은 티켓 #21.
+// 원칙: 점수/포인트 원장/티어/리더보드/문제 정답은 클라이언트가 직접 쓸 수 없다.
+//       이 데이터는 오직 Cloud Functions(admin SDK, 규칙 우회)로만 변경된다.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() { return request.auth != null; }
+    function isSelf(uid)  { return isSignedIn() && request.auth.uid == uid; }
+
+    // ── 서버 전용(클라 쓰기 전면 금지) ──────────────────────────────
+    match /pointLedger/{doc}          { allow read, write: if false; }
+    match /attempts/{doc}             { allow read, write: if false; }
+    match /leaderboardSnapshots/{doc} { allow read: if isSignedIn(); allow write: if false; }
+    match /tierState/{uid}            { allow read: if isSelf(uid);  allow write: if false; }
+    match /invites/{doc}              { allow read, write: if false; }
+    match /reports/{doc}              { allow read, write: if false; } // 신고도 함수 경유(레이트리밋)
+    // 문제는 함수가 정답을 은닉한 채 서브한다 → 클라이언트 직접 읽기 금지
+    match /questions/{qid}            { allow read, write: if false; }
+
+    // ── 사용자 소유 문서(민감 필드는 클라 변경 금지) ────────────────
+    match /users/{uid} {
+      allow read: if isSelf(uid);
+      allow create, update: if isSelf(uid)
+        && !request.resource.data.diff(resource.data).affectedKeys()
+             .hasAny(['points', 'tier', 'role', 'churchScore', 'verified']);
+      allow delete: if false;
+    }
+    match /subscriptions/{uid} { allow read: if isSelf(uid); allow write: if false; }
+
+    // ── 공개 읽기(쓰기는 함수) ──────────────────────────────────────
+    match /churches/{cid}    { allow read: if isSignedIn(); allow write: if false; }
+    match /memberships/{doc} { allow read: if isSignedIn(); allow write: if false; }
+
+    // ── 기본 거부 ───────────────────────────────────────────────────
+    match /{document=**} { allow read, write: if false; }
+  }
+}
