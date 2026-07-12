@@ -46,6 +46,13 @@
 | 종교 타깃 광고 정책·ATT | ⏸ 보류 ⚠ | 유료 UA 착수 전 필수 |
 | 상표 출원·인허가(통신판매업 등) | ⏸ 보류 | 출시 전 필수 |
 
+### 🏗 기술 스택 (2026-07-12 확정 · 상세 `adr/ADR-001-gcp-firebase.md`)
+
+- **GCP + Firebase 서버리스**로 확정. Kotlin+Spring 자체 인프라 대신 관리형 사용(백엔드 채용 보류와 정합).
+- **Cloud Functions(TypeScript)** = 모든 권위 로직(채점·원장·리더보드). **Firestore** 주 DB. 리더보드는 **주간 집계 스냅샷**. **FCM/Remote Config/Analytics+BigQuery/Crashlytics/App Check/Hosting** 활용.
+- 클라이언트: **Flutter + Riverpod 2.x + go_router** (13-client.md 권고 유지).
+- 서버 언어 결정 종결(= TypeScript Functions). 서버 문서의 데이터모델·산식·안티치트·NFR은 유효, 구현 매핑만 치환.
+
 ---
 
 ## A. 제품 정체성 & 스코프
